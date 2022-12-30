@@ -13,7 +13,7 @@ namespace qwerty
 
             while (isPlay)
             {
-                if (database.Players.Count > 0)
+                if (database.players.Count > 0)
                 {
                     database.ShowInfo();
                     Console.WriteLine("\nВыберите команду\n1)Добавить игрока\n2)Забанить игрока\n3)Разбанить игрока\n4)Удалить игрока\n5)Выйти");
@@ -69,13 +69,13 @@ namespace qwerty
 
     class Database
     {
-        public List<Player> Players = new List<Player>(); 
+        public List<Player> players = new List<Player>(); 
 
         public void ShowInfo()
         {
-            for (int i = 0; i < Players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                Console.WriteLine($"{Players[i].Id}){Players[i].Nickname} - {Players[i].Level} лвл (бан - {Players[i].IsBanned})");
+                Console.WriteLine($"{players[i].id}){players[i].nickname} - {players[i].level} лвл (бан - {players[i].isBanned})");
             }
         }
 
@@ -89,16 +89,16 @@ namespace qwerty
             Console.WriteLine("\n--Регистрация--\nДля регистрации пользователя введите следующие данные пользователя");
             id = EnterInt("ИН");
 
-            while (isPick && Players.Count != 0)
+            while (isPick && players.Count != 0)
             {
-                for (int i = 0; i < Players.Count; i++)
+                for (int i = 0; i < players.Count; i++)
                 {
-                    if (id == Players[i].Id)
+                    if (id == players[i].id)
                     {
                         Console.WriteLine("\nЭтот ИН занят");
                         break;
                     }
-                    else if (i == Players.Count - 1)
+                    else if (i == players.Count - 1)
                     {
                         isPick = false;
                     }
@@ -114,7 +114,7 @@ namespace qwerty
             Console.Write("\nНик: ");
             nickname = Console.ReadLine();
             level = EnterInt("Уровень");
-            Players.Add(new Player(id, nickname, level, false));
+            players.Add(new Player(id, nickname, level, false));
             Console.WriteLine("\nУспешно!");
         }
 
@@ -122,21 +122,21 @@ namespace qwerty
         {
             Console.WriteLine("--Бан--");
 
-            for (int i = 0; i < Players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                if (Players[i].Id == idToBan)
+                if (players[i].id == idToBan)
                 {
-                    if (Players[i].IsBanned == true)
+                    if (players[i].isBanned == true)
                     {
                         Console.WriteLine("\nЭтот игрок уже забанен");
                     }
                     else
                     {
-                        Players[i].IsBanned = true;
+                        players[i].isBanned = true;
                         Console.WriteLine("\nУспешно!");
                     }
                 }
-                else if (i == Players.Count - 1)
+                else if (i == players.Count - 1)
                 {
                     Console.WriteLine("\nТакого ИН нет");
                 }
@@ -147,21 +147,21 @@ namespace qwerty
         {
             Console.WriteLine("--Разбан--");
 
-            for (int i = 0; i < Players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                if (Players[i].Id == idToUnban)
+                if (players[i].id == idToUnban)
                 {
-                    if (Players[i].IsBanned == false)
+                    if (players[i].isBanned == false)
                     {
                         Console.WriteLine("\nЭтот игрок и так не забанен");
                     }
                     else
                     {
-                        Players[i].IsBanned = false;
+                        players[i].isBanned = false;
                         Console.WriteLine("\nУспешно!");
                     }
                 }
-                else if (i == Players.Count - 1)
+                else if (i == players.Count - 1)
                 {
                     Console.WriteLine("\nТакого ИН нет");
                 }
@@ -172,14 +172,14 @@ namespace qwerty
         {
             Console.WriteLine("--Удаление--");
 
-            for (int i = 0; i < Players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                if (Players[i].Id == idToRemove)
+                if (players[i].id == idToRemove)
                 {
-                    Players.RemoveAt(i);
+                    players.RemoveAt(i);
                     Console.WriteLine("\nУспешно!");
                 }
-                else if (i == Players.Count - 1)
+                else if (i == players.Count - 1)
                 {
                     Console.WriteLine("\nТакого ИН нет");
                 }
@@ -204,17 +204,17 @@ namespace qwerty
 
     class Player
     {
-        public int Id;
-        public string Nickname;
-        public int Level;
-        public bool IsBanned;
+        public int id;
+        public string nickname;
+        public int level;
+        public bool isBanned;
 
         public Player(int id, string nickname, int level, bool isBanned)
         {
-            Id = id;
-            Nickname = nickname;
-            Level = level;
-            IsBanned = isBanned;
+            this.id = id;
+            this.nickname = nickname;
+            this.level = level;
+            this.isBanned = isBanned;
         }
     }
 }
