@@ -195,7 +195,7 @@ namespace qwerty
 
             while (!isInt || digit < 0)
             {
-                Console.WriteLine("Введите корректное ЧИСЛО(>0)");
+                Console.WriteLine("Введите корректное ЧИСЛО(>=0)");
                 isInt = int.TryParse(Console.ReadLine(), out digit);
             }
             return digit;
