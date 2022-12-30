@@ -1,0 +1,220 @@
+using System;
+namespace qwerty
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Database database = new Database();
+            string userInput;
+            bool isPlay = true;
+
+            Console.WriteLine("База данных открыта!\n");
+
+            while (isPlay)
+            {
+                if (database.Players.Count > 0)
+                {
+                    database.ShowInfo();
+                    Console.WriteLine("\nВыберите команду\n1)Добавить игрока\n2)Забанить игрока\n3)Разбанить игрока\n4)Удалить игрока\n5)Выйти");
+                    Console.Write("Ввод...");
+                    userInput = Console.ReadLine();
+
+                    switch (userInput)
+                    {
+                        case "1":
+                            database.AddPlayer();
+                            break;
+                        case "2":
+                            database.BanPlayer(database.EnterInt("ИН для бана"));
+                            break;
+                        case "3":
+                            database.UnbanPlayer(database.EnterInt("ИН для разбана"));
+                            break;
+                        case "4":
+                            database.RemovePlayer(database.EnterInt("ИН для удаления"));
+                            break;
+                        case "5":
+                            isPlay = false;
+                            break;
+                        default:
+                            Console.WriteLine("Такой команды не существует");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Сейчас база пуста");
+                    Console.WriteLine("\nВыберите команду\n1)Добавить игрока\n2)Выйти");
+                    Console.Write("Ввод...");
+                    userInput = Console.ReadLine();
+
+                    switch (userInput)
+                    {
+                        case "1":
+                            database.AddPlayer();
+                            break;
+                        case "2":
+                            isPlay = false;
+                            break;
+                    }
+                }
+
+                Console.WriteLine("Для обновления нажмите любую кнопку...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Database
+    {
+        public List<Player> Players = new List<Player>(); 
+
+        public void ShowInfo()
+        {
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Console.WriteLine($"{Players[i].Id}){Players[i].Nickname} - {Players[i].Level} лвл (бан - {Players[i].IsBanned})");
+            }
+        }
+
+        public void AddPlayer()
+        {
+            int id;
+            bool isPick = true;
+            string nickname;
+            int level;
+
+            Console.WriteLine("\n--Регистрация--\nДля регистрации пользователя введите следующие данные пользователя");
+            id = EnterInt("ИН");
+
+            while (isPick && Players.Count != 0)
+            {
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (id == Players[i].Id)
+                    {
+                        Console.WriteLine("\nЭтот ИН занят");
+                        break;
+                    }
+                    else if (i == Players.Count - 1)
+                    {
+                        isPick = false;
+                    }
+                }
+
+                if (isPick)
+                {
+                    Console.WriteLine("Введите незанятый ИН");
+                    id = EnterInt("ИН");
+                }
+            }
+
+            Console.Write("\nНик: ");
+            nickname = Console.ReadLine();
+            level = EnterInt("Уровень");
+            Players.Add(new Player(id, nickname, level, false));
+            Console.WriteLine("\nУспешно!");
+        }
+
+        public void BanPlayer(int idToBan)
+        {
+            Console.WriteLine("--Бан--");
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Id == idToBan)
+                {
+                    if (Players[i].IsBanned == true)
+                    {
+                        Console.WriteLine("\nЭтот игрок уже забанен");
+                    }
+                    else
+                    {
+                        Players[i].IsBanned = true;
+                        Console.WriteLine("\nУспешно!");
+                    }
+                }
+                else if (i == Players.Count - 1)
+                {
+                    Console.WriteLine("\nТакого ИН нет");
+                }
+            }
+        }
+
+        public void UnbanPlayer(int idToUnban)
+        {
+            Console.WriteLine("--Разбан--");
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Id == idToUnban)
+                {
+                    if (Players[i].IsBanned == false)
+                    {
+                        Console.WriteLine("\nЭтот игрок и так не забанен");
+                    }
+                    else
+                    {
+                        Players[i].IsBanned = false;
+                        Console.WriteLine("\nУспешно!");
+                    }
+                }
+                else if (i == Players.Count - 1)
+                {
+                    Console.WriteLine("\nТакого ИН нет");
+                }
+            }
+        }
+
+        public void RemovePlayer(int idToRemove)
+        {
+            Console.WriteLine("--Удаление--");
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Id == idToRemove)
+                {
+                    Players.RemoveAt(i);
+                    Console.WriteLine("\nУспешно!");
+                }
+                else if (i == Players.Count - 1)
+                {
+                    Console.WriteLine("\nТакого ИН нет");
+                }
+            }
+        }
+
+        public int EnterInt(string description)
+        {
+            int digit = 0;
+            bool isInt = false;
+
+            Console.WriteLine("\n" + description + ":");
+
+            while (!isInt || digit < 0)
+            {
+                Console.WriteLine("Введите корректное ЧИСЛО(>0)");
+                isInt = int.TryParse(Console.ReadLine(), out digit);
+            }
+            return digit;
+        }
+    }
+
+    class Player
+    {
+        public int Id;
+        public string Nickname;
+        public int Level;
+        public bool IsBanned;
+
+        public Player(int id, string nickname, int level, bool isBanned)
+        {
+            Id = id;
+            Nickname = nickname;
+            Level = level;
+            IsBanned = isBanned;
+        }
+    }
+}
